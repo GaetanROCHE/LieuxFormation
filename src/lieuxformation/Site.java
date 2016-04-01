@@ -10,7 +10,8 @@ package lieuxformation;
  * @author gaetan
  */
 public abstract class Site {
-    
+
+    private static int id;
     private static String nom;
     private static Double longitude;
     private static Double latitude;
@@ -33,6 +34,10 @@ public abstract class Site {
     
     public Double getLatitude(){
         return this.latitude;
+    }
+
+    public int getId(){
+        return this.id;
     }
     
 }
