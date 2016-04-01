@@ -8,13 +8,18 @@ import java.util.HashMap;
  */
 public class Solution {
     private HashMap<Integer, Integer> solution;
+    private Double resultat = 0.;
 
     public Solution(HashMap<Integer, Integer> soluc){
         solution = soluc;
     }
 
-    public double resultat(){
-        return 0.;
+    public double getResultat(){
+        if(resultat == 0.){
+            return 0.;
+        }
+        else
+            return resultat;
     }
 
     public ArrayList<Solution> getVoisins(){

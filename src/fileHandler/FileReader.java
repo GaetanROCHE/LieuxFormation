@@ -16,7 +16,7 @@ public class FileReader {
             file = new File(filePath);
     }
 
-    public ArrayList getData(){
+    public ArrayList<String[]> getData(){
         ArrayList<String[]> res = new ArrayList<String[]>();
         try{
             FileInputStream fis = new FileInputStream(file);
