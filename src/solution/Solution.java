@@ -22,6 +22,11 @@ public class Solution {
             return resultat;
     }
 
+    public HashMap<Integer, Integer> getSolution() {
+        if (!this.solution.isEmpty()) {
+            return solution;
+        } else return null;
+    }
     public ArrayList<Solution> getVoisins(){
         ArrayList<Solution> res = new ArrayList<Solution>();
         return res;
