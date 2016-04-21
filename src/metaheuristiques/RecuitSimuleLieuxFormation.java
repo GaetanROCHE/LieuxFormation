@@ -40,6 +40,7 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
         for(Boolean b : agencesToPut)
             if (b)
                 x++;
+        System.out.println(x + " / " + this.nbCentresMin());
         return x>=this.nbCentresMin();
     }
 
@@ -47,50 +48,66 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
         Random rand = new Random();
 
         // Génération de la solution initiale
-        Boolean[] agencesToPut = new Boolean[this.getAgences().size()];
+        Boolean[] agencesToPutXi = new Boolean[this.getAgences().size()];
         ArrayList<Integer> listCentres = new ArrayList<Integer>();
-        for(Agence a : this.getAgences()) {
-            Boolean alea = rand.nextBoolean();
-            agencesToPut[a.getId()] = alea;
-            if(alea)
-                listCentres.add(a.getId());
-        }
+        do {
+            for (Agence a : this.getAgences()) {
+                Boolean alea = rand.nextBoolean();
+                agencesToPutXi[a.getId()] = alea;
+                if (alea)
+                    listCentres.add(a.getId());
+            }
+        }while(!isCorrect(agencesToPutXi));
         RecuitSimuleDispAgence dispAgence = new RecuitSimuleDispAgence();
         Solution xmin = dispAgence.findSolution(listCentres);               //solution minimal
         Solution xi = xmin;                                                 //solution courrante à chaque itérations
         Solution xy;                                                        //solution du voisin
+        Boolean[] agencesToPutXy = new Boolean[this.getAgences().size()];
 
         // Début de l'algorithme du recuit
-        int n1 = 10;
-        int n2 = 10;
-        int temperature = 20000;
+        int n1 = 100;
+        int n2 = 100;
+        Double temperature = 1.;
         for(int i = 0; i<n1; i++){
-            System.out.println("*** Iteration centres : " + i);
+            System.out.println("***************** Iteration centres : " + i + "*****************");
             for(int j = 0; j<n2; j++){
                 //selection d'un nouveau voisin et calcul de son résultat
-                agencesToPut = this.getVoisins(agencesToPut);
-                for(int m =0; m<agencesToPut.length; m++)
-                    if (agencesToPut[m])
+                listCentres = new ArrayList<>();
+                agencesToPutXy = this.getVoisins(agencesToPutXi);
+                for(int m =0; m<agencesToPutXy.length; m++)
+                    if (agencesToPutXy[m])
                         listCentres.add(m);
+                System.out.println("taille de la putain de liste donnée a ben : " + listCentres.size());
                 xy = dispAgence.findSolution(listCentres);
 
                 //decision de si on le prend ou non comme meilleur solution
-                if(xy.getResultat()<xi.getResultat())
-                    xi=xy;
+                if(xy.getResultat()<xi.getResultat()) {
+                    xi = xy;
+                    agencesToPutXi = agencesToPutXy;
+                }
+
                 else{
-                    int p = rand.nextInt();
-                    if(p <= (xi.getResultat()-xy.getResultat())/temperature){
+                    Double p = rand.nextDouble();
+                    if(p <= Math.exp(-(xi.getResultat()-xy.getResultat())/temperature)){
                         xi=xy;
+                        agencesToPutXi = agencesToPutXy;
                     }
                 }
 
                 //mise a jour de la meilleur solution si le voisin est le minimum
                 if(xmin.getResultat()>xy.getResultat())
                     xmin = xy;
+                System.out.println("Distance : " + xy.getDistance());
+                System.out.println("Centres : " + xy.getNbCentres());
+                System.out.println("Prix : " + xy.getResultat());
+                System.out.println("Gardé : ");
+                System.out.println("** Distance : " + xmin.getDistance());
+                System.out.println("** Centres : " + xmin.getNbCentres());
+                System.out.println("** Prix : " +xmin.getResultat());
             }
 
             //décroissance de la température
-            temperature /= 1.5;
+            temperature = temperature / 2;
         }
         return xmin;
     }

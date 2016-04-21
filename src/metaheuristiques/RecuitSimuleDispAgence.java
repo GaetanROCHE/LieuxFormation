@@ -28,11 +28,14 @@ public class RecuitSimuleDispAgence extends Heuristique{
         for(Agence ag : this.getAgences())
         {
             CentreFormation ce = map.get(ag);
-            mapCentres.put(ce, ag.getNbEmploye() + mapCentres.get(ce));
+            if(ce != null) {
+                if (mapCentres.get(ce) == null)
+                    mapCentres.put(ce, 0);
+                mapCentres.put(ce, ag.getNbEmploye() + mapCentres.get(ce));
 
-            if (mapCentres.get(ce) > 60)
-            {
-                return false;
+                if (mapCentres.get(ce) > 60) {
+                    return false;
+                }
             }
         }
 
@@ -45,7 +48,7 @@ public class RecuitSimuleDispAgence extends Heuristique{
         return checkMap(map);
     }
 
-    public Solution voisinage(Solution solution1)
+    public Solution voisinage(Solution solution1,ArrayList<Integer> ids)
     {
         HashMap<Agence, CentreFormation> map = solution1.getSolution();
         Solution retour;
@@ -55,16 +58,17 @@ public class RecuitSimuleDispAgence extends Heuristique{
             int max = map.size()-1;
             int nombreAleatoire1 = rand.nextInt(max - min + 1) + min;
             rand = new Random();
-            int nombreAleatoire2 = rand.nextInt(max - min + 1) + min;
+            int max2 = ids.size()-1;
+            int nombreAleatoire2 = rand.nextInt(max2 - min + 1) + min;
             Agence AgRandom = this.getAgences().get(nombreAleatoire1);//on choisit une agence alï¿½atoire
-            CentreFormation CeRandom = this.getCentres().get(nombreAleatoire2);//un centre alï¿½atoire
+            CentreFormation CeRandom = this.getCentres().get(ids.get(nombreAleatoire2));//un centre alï¿½atoire
 
             if(map.get(AgRandom) == CeRandom)
             {
                 do{
                     rand = new Random();
-                    nombreAleatoire2 = rand.nextInt(max - min + 1) + min;
-                    CeRandom = this.getCentres().get(nombreAleatoire2);//un centre alï¿½atoire
+                    nombreAleatoire2 = rand.nextInt(max2 - min + 1) + min;
+                    CeRandom = this.getCentres().get(ids.get(nombreAleatoire2));//un centre alï¿½atoire
                 }while(map.get(AgRandom) == CeRandom);
             }
             map.put(AgRandom, CeRandom);//on modifier la map: une agence est reliï¿½e ï¿½ un centre diffï¿½rent
@@ -104,27 +108,27 @@ public class RecuitSimuleDispAgence extends Heuristique{
             }
             while (!checkMap(map));
         }*/
-
-        for(Agence ag : this.getAgences()) {//pour chaque agence on attribue un centre aléatoire;
+        int z = 0;
+        for(Agence ag : this.getAgences()) {//pour chaque agence on attribue un centre alï¿½atoire;
+            //tem.out.println("agence : " + z);
+            z++;
             do {
                 Random rand = new Random();
-
-
                 int min = 0;
-                int max = this.getCentres().size() - 1;
+                int max = Identifiants.size() - 1;
                 int nombreAleatoire1 = rand.nextInt(max - min + 1) + min;
-                map.put(ag, this.getCentres().get(nombreAleatoire1));
+                map.put(ag, this.getCentres().get(Identifiants.get(nombreAleatoire1)));
             }
             while(!checkMap(map));
         }
 
-        double temperatureInitiale = 20000;
+        double temperatureInitiale = 1;
 
         Solution solutionMin = solutionInitiale;
         double resultatmin =  solutionMin.getResultat();
         int i = 0;
-        int n1 = 10;
-        int n2 = 10;
+        int n1 = 20;
+        int n2 = 20;
         Solution solutionEnCours = solutionInitiale;
         Solution solutionSuivante=solutionInitiale;
         double temperatureEnCours = temperatureInitiale;
@@ -143,7 +147,7 @@ public class RecuitSimuleDispAgence extends Heuristique{
 
 
                 //VOISINAGE : CHANGEMENT D'AFFECTATION D'UNE AGENCE  A UN CENTRE
-                Solution y = voisinage(solutionEnCours);
+                Solution y = voisinage(solutionEnCours,Identifiants);
                 double deltaf = y.getResultat() - solutionEnCours.getResultat();
                 if(deltaf<=0){
                     solutionSuivante = y;
@@ -158,7 +162,7 @@ public class RecuitSimuleDispAgence extends Heuristique{
                         int min = 0;
                         int max = 1;
                         int p = rand.nextInt(max - min + 1) + min;
-                        if(p<= (exp(deltaf/temperatureEnCours)) )
+                        if(p<= (exp(-deltaf/temperatureEnCours)) )
                         {
                             solutionSuivante = y;
                         }
