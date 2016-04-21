@@ -97,7 +97,7 @@ public class RecuitSimuleDispAgence extends Heuristique{
                         }
                     }
 
-                if(distance<min && check)// si c'est la distance min et qu'il y a moins de 60 agences attribées à ce centre, on conserve la distance et le centre en question
+                if(distance<min && check == true)// si c'est la distance min et qu'il y a moins de 60 agences attribées à ce centre, on conserve la distance et le centre en question
                 {
                     min = distance;
                     meilleurCentre = ce;
