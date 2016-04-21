@@ -18,30 +18,6 @@ public class RecuitSimuleDispAgence extends Heuristique{
         super();
     }
 
-
-
-    public boolean checkMap(HashMap<Agence, CentreFormation> map)
-    {
-
-        HashMap<CentreFormation, Integer> mapCentres = new HashMap();
-
-        for(Agence ag : this.getAgences())
-        {
-            CentreFormation ce = map.get(ag);
-            if(ce != null) {
-                if (mapCentres.get(ce) == null)
-                    mapCentres.put(ce, 0);
-                mapCentres.put(ce, ag.getNbEmploye() + mapCentres.get(ce));
-
-                if (mapCentres.get(ce) > 60) {
-                    return false;
-                }
-            }
-        }
-
-        return true;// solution valide
-    }
-
     public boolean checkSolution(Solution solution)
     {
         HashMap<Agence, CentreFormation> map = solution.getSolution();

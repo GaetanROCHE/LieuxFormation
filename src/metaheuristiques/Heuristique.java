@@ -6,6 +6,7 @@ import lieuxformation.CentreFormation;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by gaetan on 01/04/16.
@@ -41,6 +42,25 @@ public abstract class Heuristique {
             centres.add(ceTemp);
         }
         System.out.println("Heuristique chargé");
+    }
+
+    public boolean checkMap(HashMap<Agence, CentreFormation> map)
+    {
+        HashMap<CentreFormation, Integer> mapCentres = new HashMap();
+        for(Agence ag : this.getAgences())
+        {
+            CentreFormation ce = map.get(ag);
+            if(ce != null) {
+                if (mapCentres.get(ce) == null)
+                    mapCentres.put(ce, 0);
+                mapCentres.put(ce, ag.getNbEmploye() + mapCentres.get(ce));
+
+                if (mapCentres.get(ce) > 60) {
+                    return false;
+                }
+            }
+        }
+        return true;// solution valide
     }
 
     public ArrayList<CentreFormation> getCentres(){
