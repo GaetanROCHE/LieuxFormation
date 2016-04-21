@@ -18,28 +18,50 @@ public class RecuitSimuleDispAgence extends Heuristique{
         super();
     }
 
+    public boolean checkSolution(Solution solution)
+    {
+        HashMap<Integer, Integer> map = solution.getSolution();
+        for(CentreFormation ce : this.getCentres())
+        {   int i = 0;
+
+                for (int j=0; j<map.size(); j++) {
+                    if (map.get(j) == ce.getId()) {
+                        i++;
+                        if (i > 60)
+                        {
+                            return false; // Solution invalide
+                        }
+                    }
+                }
+        }
+        return true;// solution valide
+    }
+
     public Solution voisinage(Solution solution1)
     {
         HashMap<Integer, Integer> map = solution1.getSolution();
-        Random rand = new Random();
-        int min = 0;
-        int max = map.size();
-        int nombreAleatoire1 = rand.nextInt(max - min + 1) + min;
-        rand = new Random();
-        int nombreAleatoire2 = rand.nextInt(max - min + 1) + min;
-        int idAgRandom = this.getAgences().get(nombreAleatoire1).getId();//on choisit une agence aléatoire
-        int idCeRandom = this.getCentres().get(nombreAleatoire2).getId();//un centre aléatoire
+        Solution retour;
+        do{
+            Random rand = new Random();
+            int min = 0;
+            int max = map.size();
+            int nombreAleatoire1 = rand.nextInt(max - min + 1) + min;
+            rand = new Random();
+            int nombreAleatoire2 = rand.nextInt(max - min + 1) + min;
+            int idAgRandom = this.getAgences().get(nombreAleatoire1).getId();//on choisit une agence aléatoire
+            int idCeRandom = this.getCentres().get(nombreAleatoire2).getId();//un centre aléatoire
 
-        if(map.get(idAgRandom) == idCeRandom)
-        {
-            do{
-                rand = new Random();
-                nombreAleatoire2 = rand.nextInt(max - min + 1) + min;
-                idCeRandom = this.getCentres().get(nombreAleatoire2).getId();//un centre aléatoire
-            }while(map.get(idAgRandom) == idCeRandom);
-        }
-        map.put(idAgRandom, idCeRandom);//on modifier la map: une agence est reliée à un centre différent
-        Solution retour = new Solution(map);
+            if(map.get(idAgRandom) == idCeRandom)
+            {
+                do{
+                    rand = new Random();
+                    nombreAleatoire2 = rand.nextInt(max - min + 1) + min;
+                    idCeRandom = this.getCentres().get(nombreAleatoire2).getId();//un centre aléatoire
+                }while(map.get(idAgRandom) == idCeRandom);
+            }
+            map.put(idAgRandom, idCeRandom);//on modifier la map: une agence est reliée à un centre différent
+            retour = new Solution(map);}
+        while(!checkSolution(retour));
         return retour;
     }
 
@@ -61,7 +83,21 @@ public class RecuitSimuleDispAgence extends Heuristique{
             {
                 CentreFormation ce = this.getCentres().get(id);
                 double distance = ag.distance(ce);//on calcule la distance
-                if(distance<min)// si c'est la distance min, on conserve la distance et le centre en question
+
+                //Vérification de la validité du centre
+                int i = 0;
+                boolean check = true;
+                    for (int j=0; j<map.size(); j++) {
+                        if (map.get(j) == ce.getId()) {
+                            i++;
+                            if (i > 60)
+                            {
+                                check =false;
+                            }
+                        }
+                    }
+
+                if(distance<min && check)// si c'est la distance min et qu'il y a moins de 60 agences attribées à ce centre, on conserve la distance et le centre en question
                 {
                     min = distance;
                     meilleurCentre = ce;
