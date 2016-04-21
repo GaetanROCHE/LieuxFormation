@@ -18,24 +18,31 @@ public class RecuitSimuleDispAgence extends Heuristique{
         super();
     }
 
+
+
+    public boolean checkMap(HashMap<Agence, CentreFormation> map)
+    {
+
+        HashMap<CentreFormation, Integer> mapCentres = new HashMap();
+
+        for(Agence ag : this.getAgences())
+        {
+            CentreFormation ce = map.get(ag);
+            mapCentres.put(ce, ag.getNbEmploye() + mapCentres.get(ce));
+
+            if (mapCentres.get(ce) > 60)
+            {
+                return false;
+            }
+        }
+
+        return true;// solution valide
+    }
+
     public boolean checkSolution(Solution solution)
     {
         HashMap<Agence, CentreFormation> map = solution.getSolution();
-        for(CentreFormation ce : this.getCentres())
-        {   int i = 0;
-
-                for (int j=0; j<map.size(); j++) {
-
-                    if (map.get(j) == ce) {
-                        i++;
-                        if (i > 60)
-                        {
-                            return false; // Solution invalide
-                        }
-                    }
-                }
-        }
-        return true;// solution valide
+        return checkMap(map);
     }
 
     public Solution voisinage(Solution solution1)
@@ -77,34 +84,38 @@ public class RecuitSimuleDispAgence extends Heuristique{
         HashMap<Agence, CentreFormation> map = new HashMap();
         Solution solutionInitiale = new Solution(map);
 
-        for(Agence ag : this.getAgences()){//pour chaque agence
-            double min = Double.MAX_VALUE;
-            CentreFormation meilleurCentre = null;
-            for (int id : Identifiants)    //on parcours chaque centre
-            {
-                CentreFormation ce = this.getCentres().get(id);
-                double distance = ag.distance(ce);//on calcule la distance
-
-                //Vï¿½rification de la validitï¿½ du centre
-                int i = 0;
-                boolean check = true;
-                    for (int j=0; j<map.size(); j++) {
-                        if (map.get(j) == ce) {
-                            i++;
-                            if (i > 60)
-                            {
-                                check =false;
-                            }
-                        }
-                    }
-
-                if(distance<min && check)// si c'est la distance min et qu'il y a moins de 60 agences attribï¿½es ï¿½ ce centre, on conserve la distance et le centre en question
+        /*for(Agence ag : this.getAgences()){//pour chaque agence
+            do{
+                double min = Double.MAX_VALUE;
+                CentreFormation meilleurCentre = null;
+                for (int id : Identifiants)    //on parcours chaque centre
                 {
-                    min = distance;
-                    meilleurCentre = ce;
+                    CentreFormation ce = this.getCentres().get(id);
+                    double distance = ag.distance(ce);//on calcule la distance
+
+
+                    if(distance<min && check == true)// si c'est la distance min, on conserve la distance et le centre en question
+                    {
+                        min = distance;
+                        meilleurCentre = ce;
+                    }
                 }
+                map.put(ag, meilleurCentre);// a la fin on ajoute a la map, la ville avec le centre le plus proche
             }
-            map.put(ag, meilleurCentre);// ï¿½ la fin on ajoute ï¿½ la map, la ville avec le centre le plus proche
+            while (!checkMap(map));
+        }*/
+
+        for(Agence ag : this.getAgences()) {//pour chaque agence on attribue un centre aléatoire;
+            do {
+                Random rand = new Random();
+
+
+                int min = 0;
+                int max = this.getCentres().size() - 1;
+                int nombreAleatoire1 = rand.nextInt(max - min + 1) + min;
+                map.put(ag, this.getCentres().get(nombreAleatoire1));
+            }
+            while(!checkMap(map));
         }
 
         double temperatureInitiale = 20000;
