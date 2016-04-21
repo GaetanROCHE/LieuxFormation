@@ -29,7 +29,7 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
                 listCentres.add(a.getId());
         }
         RecuitSimuleDispAgence dispAgence = new RecuitSimuleDispAgence();
-        Solution xmin = dispAgence.FindSolution(listCentres); //solution minimal
+        Solution xmin = dispAgence.findSolution(listCentres); //solution minimal
         Solution xi = xmin;                                   //solution courrante à chaque itérations
         Solution xy;                                          //solution du voisin
 
@@ -46,7 +46,7 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
                 for(int m =0; m<agencesToPut.length; m++)
                     if (agencesToPut[m])
                         listCentres.add(m);
-                xy = dispAgence.FindSolution(listCentres);
+                xy = dispAgence.findSolution(listCentres);
 
                 //decision de si on le prend ou non comme meilleur solution
                 if(xy.getResultat()<xi.getResultat())
