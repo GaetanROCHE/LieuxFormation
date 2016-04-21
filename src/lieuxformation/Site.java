@@ -11,15 +11,16 @@ package lieuxformation;
  */
 public abstract class Site {
 
-    private static int id;
-    private static String nom;
-    private static Double longitude;
-    private static Double latitude;
+    private int id;
+    private String nom;
+    private Double longitude;
+    private Double latitude;
     
-    public Site(String nom, Double longitude, Double latitude){
-        Site.nom = nom;
-        Site.longitude = longitude;
-        Site.latitude = latitude;
+    public Site(String nom, Double longitude, Double latitude, int id){
+        this.nom = nom;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.id = id;
     }
     
     public Double distance(Site lieux){

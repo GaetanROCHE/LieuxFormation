@@ -21,19 +21,26 @@ public abstract class Heuristique {
         FileReader fileCentres = new FileReader("ressources/LieuxPossibles.txt");
         ArrayList<String[]> AgencesBrute = fileAgences.getData();
         ArrayList<String[]> CentresBrute = fileCentres.getData();
-        for(String[] agencesFromStrings : AgencesBrute){;
+        int i =0;
+        int j = 0;
+        for(String[] agencesFromStrings : AgencesBrute){
             Agence agTemp = new Agence(agencesFromStrings[1],
                     Double.parseDouble(agencesFromStrings[4]),
                     Double.parseDouble(agencesFromStrings[3]),
-                    Integer.parseInt(agencesFromStrings[5]));
+                    Integer.parseInt(agencesFromStrings[5]),
+                    i);
+            i++;
             agences.add(agTemp);
         }
-        for(String[] centresFromStrings : CentresBrute){;
+        for(String[] centresFromStrings : CentresBrute){
             CentreFormation ceTemp = new CentreFormation(centresFromStrings[1],
                     Double.parseDouble(centresFromStrings[4]),
-                    Double.parseDouble(centresFromStrings[3]));
+                    Double.parseDouble(centresFromStrings[3]),
+                    j);
+            j++;
             centres.add(ceTemp);
         }
+        System.out.println("Heuristique chargé");
     }
 
     public ArrayList<CentreFormation> getCentres(){

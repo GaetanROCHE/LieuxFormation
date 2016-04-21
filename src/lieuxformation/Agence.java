@@ -12,14 +12,13 @@ package lieuxformation;
 public class Agence extends Site{
     
     private int nb_employes;
-    private int nbEmploye;
 
-    public Agence(String name, Double longitude, Double latitude, int nb_employes) {
-        super(name, longitude, latitude);
+    public Agence(String name, Double longitude, Double latitude, int nb_employes, int id) {
+        super(name, longitude, latitude, id);
         this.nb_employes = nb_employes;
     }
 
     public int getNbEmploye() {
-        return nbEmploye;
+        return nb_employes;
     }
 }

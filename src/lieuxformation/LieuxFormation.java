@@ -5,6 +5,9 @@
  */
 package lieuxformation;
 
+import metaheuristiques.RecuitSimuleLieuxFormation;
+import solution.Solution;
+
 /**
  *
  * @author gaetan
@@ -15,7 +18,11 @@ public class LieuxFormation {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        RecuitSimuleLieuxFormation heuristique = new RecuitSimuleLieuxFormation();
+        Solution s = heuristique.run();
+        System.out.println("nombres de centres : " + s.getNbCentres());
+        System.out.println("kilomètres parcourus : " + s.getDistance());
+        System.out.println("resultat : " + s.getResultat());
     }
     
 }

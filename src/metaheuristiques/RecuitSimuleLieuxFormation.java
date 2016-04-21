@@ -16,6 +16,33 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
         super();
     }
 
+    /**
+     * renvoi un tableau de booleen correspondant au centre de formation et vérifiant qu'il y ai assez de centres
+     * @param agencesToPut Array de boolean
+     * @return Array de booléen avec minimum nbCentresMin true;
+     */
+    public Boolean[] getVoisins(Boolean[] agencesToPut){
+        Random rand = new Random();
+        do {
+            int alea2 = rand.nextInt(agencesToPut.length);
+            agencesToPut[alea2] = !agencesToPut[alea2]; //on enlève ou ajoute aléatoirement un centre de la liste
+        } while(!isCorrect(agencesToPut));
+        return agencesToPut;
+    }
+
+    /**
+     * Verifie qu'il y a au moins nbCentresMin true dans un tableau de booleen.
+     * @param agencesToPut Boolean[]
+     * @return Boolean
+     */
+    public Boolean isCorrect(Boolean[] agencesToPut){
+        int x = 0;
+        for(Boolean b : agencesToPut)
+            if (b)
+                x++;
+        return x>=this.nbCentresMin();
+    }
+
     public Solution run(){
         Random rand = new Random();
 
@@ -29,20 +56,19 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
                 listCentres.add(a.getId());
         }
         RecuitSimuleDispAgence dispAgence = new RecuitSimuleDispAgence();
-        Solution xmin = dispAgence.findSolution(listCentres); //solution minimal
-        Solution xi = xmin;                                   //solution courrante à chaque itérations
-        Solution xy;                                          //solution du voisin
+        Solution xmin = dispAgence.findSolution(listCentres);               //solution minimal
+        Solution xi = xmin;                                                 //solution courrante à chaque itérations
+        Solution xy;                                                        //solution du voisin
 
         // Début de l'algorithme du recuit
-        int n1 = 200;
-        int n2 = 100;
-        int i = 0;
-        int temperature = 20;
-        for(int j = 0; i<n1; i++){
-            for(int k = 0; j<n2; j++){
+        int n1 = 10;
+        int n2 = 10;
+        int temperature = 20000;
+        for(int i = 0; i<n1; i++){
+            System.out.println("*** Iteration centres : " + i);
+            for(int j = 0; j<n2; j++){
                 //selection d'un nouveau voisin et calcul de son résultat
-                int alea2 = rand.nextInt(this.getAgences().size());
-                agencesToPut[alea2] = !agencesToPut[alea2]; //on enlève ou ajoute aléatoirement un centre de la liste
+                agencesToPut = this.getVoisins(agencesToPut);
                 for(int m =0; m<agencesToPut.length; m++)
                     if (agencesToPut[m])
                         listCentres.add(m);
@@ -53,7 +79,7 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
                     xi=xy;
                 else{
                     int p = rand.nextInt();
-                    if(p <= xi.getResultat()-xy.getResultat()){
+                    if(p <= (xi.getResultat()-xy.getResultat())/temperature){
                         xi=xy;
                     }
                 }
@@ -64,9 +90,9 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
             }
 
             //décroissance de la température
-            temperature /= 0.5;
+            temperature /= 1.5;
         }
-        return null;
+        return xmin;
     }
 
     public int nbCentresMin(){
