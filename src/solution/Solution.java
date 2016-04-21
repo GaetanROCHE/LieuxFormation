@@ -14,6 +14,9 @@ public class Solution {
         solution = soluc;
     }
 
+    /**
+     * @return Double calcul la valeur de la solution si elle n'est pas déjà calculée et la retourne;
+     */
     public double getResultat(){
         if(resultat == 0.){
             return 0.;
@@ -22,11 +25,18 @@ public class Solution {
             return resultat;
     }
 
+    /**
+     * @return HashMap La solution courrante
+     */
     public HashMap<Integer, Integer> getSolution() {
         if (!this.solution.isEmpty()) {
             return solution;
         } else return null;
     }
+
+    /**
+     * @return ArrayList<Solution> La liste des voisins de la solution
+     */
     public ArrayList<Solution> getVoisins(){
         ArrayList<Solution> res = new ArrayList<Solution>();
         return res;

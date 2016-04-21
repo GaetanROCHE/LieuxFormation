@@ -63,50 +63,37 @@ public class RecuitSimuleLieuxFormation extends Heuristique{
         
 
         
-    Solution solutionInitiale = new Solution(map);  
-    int temperatureInitiale = 1000;
-        
-    Solution solutionMin = solutionInitiale;
-    double resultatmin =  solutionMin.getResultat();
-    int i = 0;
-    int n1 = 1;
-    int n2 = 2;
-    Solution solutionEnCours = solutionInitiale;
-    for(int k=0; k<n1; k++)
-    {
-        for(int l=0; l<n2; l++)
+        Solution solutionInitiale = new Solution(map);
+        int temperatureInitiale = 1000;
+
+        Solution solutionMin = solutionInitiale;
+        double resultatmin =  solutionMin.getResultat();
+        int i = 0;
+        int n1 = 1;
+        int n2 = 2;
+        Solution solutionEnCours = solutionInitiale;
+        for(int k=0; k<n1; k++)
         {
-            //VOISINAGE : CHANGEMENT D'AFFECTATION D'UNE AGENCE  A UN CENTRE
-            Solution y = Voisinage(solutionEnCours);
-            double deltaf = y.getResultat() - solutionEnCours.getResultat();
-            if(deltaf<=0){
-                solutionEnCours = y;
-                if(solutionEnCours.getResultat()<resultatmin)
-                {
-                    resultatmin=solutionEnCours.getResultat();
-                    solutionMin=solutionEnCours;
+            for(int l=0; l<n2; l++)
+            {
+                //VOISINAGE : CHANGEMENT D'AFFECTATION D'UNE AGENCE  A UN CENTRE
+                Solution y = Voisinage(solutionEnCours);
+                double deltaf = y.getResultat() - solutionEnCours.getResultat();
+                if(deltaf<=0){
+                    solutionEnCours = y;
+                    if(solutionEnCours.getResultat()<resultatmin)
+                    {
+                        resultatmin=solutionEnCours.getResultat();
+                        solutionMin=solutionEnCours;
+                    }
                 }
+                else{
+                        // J'ai pas compris ce qu'il doit se passer ici
+                }
+                i= i+1;
             }
-            else{
-                    // J'ai pas compris ce qu'il doit se passer ici
-            }
-            i= i+1;
         }
-    }
-    
-    
-    
-    
-        
-        
-        
-        
-        
-    return solution;
-    
-    
-    
-    
+        return solution;
     
     }
     
