@@ -2,10 +2,13 @@ package metaheuristiques;
         import java.util.ArrayList;
         import java.util.HashMap;
         import java.util.Random;
+        import static java.lang.StrictMath.exp;
 
         import lieuxformation.Agence;
         import lieuxformation.CentreFormation;
         import solution.Solution;
+
+
 /**
  * Created by gaetan on 01/04/16.
  */
@@ -15,7 +18,7 @@ public class RecuitSimuleDispAgence extends Heuristique{
         super();
     }
 
-    public Solution Voisinage(Solution solution1)
+    public Solution voisinage(Solution solution1)
     {
         HashMap<Integer, Integer> map = solution1.getSolution();
         Random rand = new Random();
@@ -40,9 +43,16 @@ public class RecuitSimuleDispAgence extends Heuristique{
         return retour;
     }
 
-    public Solution FindSolution(ArrayList<Integer> Identifiants){//Recherche d'une solution pour les centres proposés
+    public double avancementTemperature(double temperatureInitiale){
+
+        double nouvelleTemperature;
+        nouvelleTemperature = temperatureInitiale/(1.5);
+        return nouvelleTemperature;
+    }
+
+    public Solution findSolution(ArrayList<Integer> Identifiants){//Recherche d'une solution pour les centres proposés
         HashMap<Integer, Integer> map = new HashMap();
-        Solution solution = new Solution(map);
+        Solution solutionInitiale = new Solution(map);
 
         for(Agence ag : this.getAgences()){//pour chaque agence
             double min = Double.MAX_VALUE;
@@ -60,13 +70,7 @@ public class RecuitSimuleDispAgence extends Heuristique{
             map.put(ag.getId(), meilleurCentre.getId());// à la fin on ajoute à la map, la ville avec le centre le plus proche
         }
 
-
-
-
-        Solution solutionInitiale = new Solution(map);
-
-
-        int temperatureInitiale = 1000;
+        double temperatureInitiale = 1000;
 
         Solution solutionMin = solutionInitiale;
         double resultatmin =  solutionMin.getResultat();
@@ -74,28 +78,53 @@ public class RecuitSimuleDispAgence extends Heuristique{
         int n1 = 1;
         int n2 = 2;
         Solution solutionEnCours = solutionInitiale;
+        Solution solutionSuivante=solutionInitiale;
+        double temperatureEnCours = temperatureInitiale;
+        double temperatureSuivante = temperatureInitiale;
         for(int k=0; k<n1; k++)
         {
+
+            if(temperatureSuivante!=temperatureInitiale){
+                temperatureEnCours = temperatureSuivante;
+            }
             for(int l=0; l<n2; l++)
             {
+
+                if(solutionSuivante!=solutionInitiale){
+                    solutionEnCours = solutionSuivante;
+                }
+
+
                 //VOISINAGE : CHANGEMENT D'AFFECTATION D'UNE AGENCE  A UN CENTRE
-                Solution y = Voisinage(solutionEnCours);
+                Solution y = voisinage(solutionEnCours);
                 double deltaf = y.getResultat() - solutionEnCours.getResultat();
                 if(deltaf<=0){
-                    solutionEnCours = y;
-                    if(solutionEnCours.getResultat()<resultatmin)
+                    solutionSuivante = y;
+                    if(solutionSuivante.getResultat()<resultatmin)
                     {
-                        resultatmin=solutionEnCours.getResultat();
-                        solutionMin=solutionEnCours;
+                        resultatmin=solutionSuivante.getResultat();
+                        solutionMin=solutionSuivante;
                     }
                 }
                 else{
-                    // J'ai pas compris ce qu'il doit se passer ici
-                }
+                        Random rand = new Random();
+                        int min = 0;
+                        int max = 1;
+                        int p = rand.nextInt(max - min + 1) + min;
+                        if(p<= (exp(deltaf/temperatureEnCours)) )
+                        {
+                            solutionSuivante = y;
+                        }
+                        else
+                        {
+                            solutionSuivante = solutionEnCours;
+                        }
+                    }
                 i= i+1;
             }
+            temperatureSuivante=avancementTemperature(temperatureEnCours);
         }
-        return solution;
+        return solutionMin;
 
     }
 
