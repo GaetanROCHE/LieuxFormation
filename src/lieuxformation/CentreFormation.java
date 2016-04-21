@@ -12,8 +12,8 @@ package lieuxformation;
 public class CentreFormation extends Site{
     
     //qu'une formation par ville
-    public CentreFormation(String name, Double longitude, Double latitude) {
-        super(name, longitude, latitude);
+    public CentreFormation(String name, Double longitude, Double latitude, int id) {
+        super(name, longitude, latitude, id);
     }
     
 }

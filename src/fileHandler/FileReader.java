@@ -23,6 +23,7 @@ public class FileReader {
             InputStreamReader lecteur = new InputStreamReader(fis);
             BufferedReader buff = new BufferedReader(lecteur);
             String ligne = "";
+            buff.readLine();
             while((ligne=buff.readLine())!=null){
                 String[] ligneFrag = ligne.split(";");
                 res.add(ligneFrag);

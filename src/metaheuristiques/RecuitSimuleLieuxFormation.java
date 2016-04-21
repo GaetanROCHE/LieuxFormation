@@ -24,9 +24,9 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
     public Boolean[] getVoisins(Boolean[] agencesToPut){
         Random rand = new Random();
         do {
-            int alea2 = rand.nextInt(this.getAgences().size());
+            int alea2 = rand.nextInt(agencesToPut.length);
             agencesToPut[alea2] = !agencesToPut[alea2]; //on enlève ou ajoute aléatoirement un centre de la liste
-        } while(isCorrect(agencesToPut));
+        } while(!isCorrect(agencesToPut));
         return agencesToPut;
     }
 
@@ -61,12 +61,12 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
         Solution xy;                                                        //solution du voisin
 
         // Début de l'algorithme du recuit
-        int n1 = 200;
-        int n2 = 100;
-        int i = 0;
-        int temperature = 20;
-        for(int j = 0; i<n1; i++){
-            for(int k = 0; j<n2; j++){
+        int n1 = 10;
+        int n2 = 10;
+        int temperature = 20000;
+        for(int i = 0; i<n1; i++){
+            System.out.println("*** Iteration centres : " + i);
+            for(int j = 0; j<n2; j++){
                 //selection d'un nouveau voisin et calcul de son résultat
                 agencesToPut = this.getVoisins(agencesToPut);
                 for(int m =0; m<agencesToPut.length; m++)
@@ -92,7 +92,7 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
             //décroissance de la température
             temperature /= 1.5;
         }
-        return null;
+        return xmin;
     }
 
     public int nbCentresMin(){

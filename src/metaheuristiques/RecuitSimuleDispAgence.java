@@ -20,12 +20,13 @@ public class RecuitSimuleDispAgence extends Heuristique{
 
     public boolean checkSolution(Solution solution)
     {
-        HashMap<Integer, Integer> map = solution.getSolution();
+        HashMap<Agence, CentreFormation> map = solution.getSolution();
         for(CentreFormation ce : this.getCentres())
         {   int i = 0;
 
                 for (int j=0; j<map.size(); j++) {
-                    if (map.get(j) == ce.getId()) {
+
+                    if (map.get(j) == ce) {
                         i++;
                         if (i > 60)
                         {
@@ -39,27 +40,27 @@ public class RecuitSimuleDispAgence extends Heuristique{
 
     public Solution voisinage(Solution solution1)
     {
-        HashMap<Integer, Integer> map = solution1.getSolution();
+        HashMap<Agence, CentreFormation> map = solution1.getSolution();
         Solution retour;
         do{
             Random rand = new Random();
             int min = 0;
-            int max = map.size();
+            int max = map.size()-1;
             int nombreAleatoire1 = rand.nextInt(max - min + 1) + min;
             rand = new Random();
             int nombreAleatoire2 = rand.nextInt(max - min + 1) + min;
-            int idAgRandom = this.getAgences().get(nombreAleatoire1).getId();//on choisit une agence aléatoire
-            int idCeRandom = this.getCentres().get(nombreAleatoire2).getId();//un centre aléatoire
+            Agence AgRandom = this.getAgences().get(nombreAleatoire1);//on choisit une agence alï¿½atoire
+            CentreFormation CeRandom = this.getCentres().get(nombreAleatoire2);//un centre alï¿½atoire
 
-            if(map.get(idAgRandom) == idCeRandom)
+            if(map.get(AgRandom) == CeRandom)
             {
                 do{
                     rand = new Random();
                     nombreAleatoire2 = rand.nextInt(max - min + 1) + min;
-                    idCeRandom = this.getCentres().get(nombreAleatoire2).getId();//un centre aléatoire
-                }while(map.get(idAgRandom) == idCeRandom);
+                    CeRandom = this.getCentres().get(nombreAleatoire2);//un centre alï¿½atoire
+                }while(map.get(AgRandom) == CeRandom);
             }
-            map.put(idAgRandom, idCeRandom);//on modifier la map: une agence est reliée à un centre différent
+            map.put(AgRandom, CeRandom);//on modifier la map: une agence est reliï¿½e ï¿½ un centre diffï¿½rent
             retour = new Solution(map);}
         while(!checkSolution(retour));
         return retour;
@@ -72,8 +73,8 @@ public class RecuitSimuleDispAgence extends Heuristique{
         return nouvelleTemperature;
     }
 
-    public Solution findSolution(ArrayList<Integer> Identifiants){//Recherche d'une solution pour les centres proposés
-        HashMap<Integer, Integer> map = new HashMap();
+    public Solution findSolution(ArrayList<Integer> Identifiants){//Recherche d'une solution pour les centres proposï¿½s
+        HashMap<Agence, CentreFormation> map = new HashMap();
         Solution solutionInitiale = new Solution(map);
 
         for(Agence ag : this.getAgences()){//pour chaque agence
@@ -84,11 +85,11 @@ public class RecuitSimuleDispAgence extends Heuristique{
                 CentreFormation ce = this.getCentres().get(id);
                 double distance = ag.distance(ce);//on calcule la distance
 
-                //Vérification de la validité du centre
+                //Vï¿½rification de la validitï¿½ du centre
                 int i = 0;
                 boolean check = true;
                     for (int j=0; j<map.size(); j++) {
-                        if (map.get(j) == ce.getId()) {
+                        if (map.get(j) == ce) {
                             i++;
                             if (i > 60)
                             {
@@ -97,29 +98,28 @@ public class RecuitSimuleDispAgence extends Heuristique{
                         }
                     }
 
-                if(distance<min && check)// si c'est la distance min et qu'il y a moins de 60 agences attribées à ce centre, on conserve la distance et le centre en question
+                if(distance<min && check)// si c'est la distance min et qu'il y a moins de 60 agences attribï¿½es ï¿½ ce centre, on conserve la distance et le centre en question
                 {
                     min = distance;
                     meilleurCentre = ce;
                 }
             }
-            map.put(ag.getId(), meilleurCentre.getId());// à la fin on ajoute à la map, la ville avec le centre le plus proche
+            map.put(ag, meilleurCentre);// ï¿½ la fin on ajoute ï¿½ la map, la ville avec le centre le plus proche
         }
 
-        double temperatureInitiale = 1000;
+        double temperatureInitiale = 20000;
 
         Solution solutionMin = solutionInitiale;
         double resultatmin =  solutionMin.getResultat();
         int i = 0;
-        int n1 = 1;
-        int n2 = 2;
+        int n1 = 10;
+        int n2 = 10;
         Solution solutionEnCours = solutionInitiale;
         Solution solutionSuivante=solutionInitiale;
         double temperatureEnCours = temperatureInitiale;
         double temperatureSuivante = temperatureInitiale;
         for(int k=0; k<n1; k++)
         {
-
             if(temperatureSuivante!=temperatureInitiale){
                 temperatureEnCours = temperatureSuivante;
             }
