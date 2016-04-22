@@ -134,19 +134,19 @@ public class RecuitSimuleDispAgence extends Heuristique{
                     }
                 }
                 else{
-                        Random rand = new Random();
-                        int min = 0;
-                        int max = 1;
-                        int p = rand.nextInt(max - min + 1) + min;
-                        if(p<= (exp(-deltaf/temperatureEnCours)) )
-                        {
-                            solutionSuivante = y;
-                        }
-                        else
-                        {
-                            solutionSuivante = solutionEnCours;
-                        }
+                    Random rand = new Random();
+                    int min = 0;
+                    int max = 1;
+                    int p = rand.nextInt(max - min + 1) + min;
+                    if(p<= (exp(-deltaf/temperatureEnCours)) )
+                    {
+                        solutionSuivante = y;
                     }
+                    else
+                    {
+                        solutionSuivante = solutionEnCours;
+                    }
+                }
                 i= i+1;
             }
             temperatureSuivante=avancementTemperature(temperatureEnCours);

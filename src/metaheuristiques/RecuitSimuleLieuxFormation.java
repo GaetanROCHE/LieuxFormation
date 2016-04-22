@@ -2,6 +2,7 @@
 package metaheuristiques;
 
 import lieuxformation.Agence;
+import lieuxformation.CentreFormation;
 import solution.Solution;
 
 import java.util.ArrayList;
@@ -18,79 +19,101 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
 
     /**
      * renvoi un tableau de booleen correspondant au centre de formation et vérifiant qu'il y ai assez de centres
-     * @param agencesToPut Array de boolean
+     * @param centresToPut Array de boolean
      * @return Array de booléen avec minimum nbCentresMin true;
      */
-    public Boolean[] getVoisins(Boolean[] agencesToPut){
+    public Boolean[] getVoisins(Boolean[] centresToPut){
         Random rand = new Random();
+        int alea2;
+        Boolean[] centresToPutTemp;
         do {
-            int alea2 = rand.nextInt(agencesToPut.length);
-            agencesToPut[alea2] = !agencesToPut[alea2]; //on enlève ou ajoute aléatoirement un centre de la liste
-        } while(!isCorrect(agencesToPut));
-        return agencesToPut;
+            centresToPutTemp = centresToPut.clone();
+            if (rand.nextInt(2) < 1) {
+                //3 chances sur 5 de d'enlever un centre
+
+                do {
+                    alea2 = rand.nextInt(centresToPutTemp.length);
+                } while (!centresToPutTemp[alea2]);
+                centresToPutTemp[alea2] = !centresToPutTemp[alea2]; //on enlève ou ajoute aléatoirement un centre de la liste
+            } else {
+                //une chance sur deux de d'ajouter un centre
+
+                do {
+                    alea2 = rand.nextInt(centresToPutTemp.length);
+                } while (centresToPutTemp[alea2]);
+                centresToPutTemp[alea2] = !centresToPutTemp[alea2]; //on enlève ou ajoute aléatoirement un centre de la liste
+            }
+        } while(!isCorrect(centresToPutTemp));
+
+        return centresToPutTemp;
     }
 
     /**
      * Verifie qu'il y a au moins nbCentresMin true dans un tableau de booleen.
-     * @param agencesToPut Boolean[]
+     * @param centresToPut Boolean[]
      * @return Boolean
      */
-    public Boolean isCorrect(Boolean[] agencesToPut){
+    public Boolean isCorrect(Boolean[] centresToPut){
         int x = 0;
-        for(Boolean b : agencesToPut)
+        for(Boolean b : centresToPut)
             if (b)
                 x++;
         System.out.println(x + " / " + this.nbCentresMin());
-        return x>=this.nbCentresMin();
+        return x>this.nbCentresMin();
     }
 
     public Solution run(){
         Random rand = new Random();
 
         // Génération de la solution initiale
-        Boolean[] agencesToPutXi = new Boolean[this.getAgences().size()];
+        Boolean[] centresToPutXi = new Boolean[this.getCentres().size()];
+        for(int m=0;m<this.getCentres().size(); m++)
+            centresToPutXi[m] = false;
         ArrayList<Integer> listCentres = new ArrayList<Integer>();
         do {
-            for (Agence a : this.getAgences()) {
-                Boolean alea = rand.nextBoolean();
-                agencesToPutXi[a.getId()] = alea;
-                if (alea)
-                    listCentres.add(a.getId());
+            for (int i =0; i<this.nbCentresMin() * 1.5; i++) {
+                int alea;
+                do {
+                    alea = rand.nextInt(this.getCentres().size());
+                }while(listCentres.contains(alea));
+                listCentres.add(alea);
+                centresToPutXi[alea] = true;
             }
-        }while(!isCorrect(agencesToPutXi));
+        }while(!isCorrect(centresToPutXi));
         RecuitSimuleDispAgence dispAgence = new RecuitSimuleDispAgence();
         Solution xmin = dispAgence.findSolution(listCentres);               //solution minimal
         Solution xi = xmin;                                                 //solution courrante à chaque itérations
         Solution xy;                                                        //solution du voisin
-        Boolean[] agencesToPutXy = new Boolean[this.getAgences().size()];
+        Boolean[] centresToPutXy;
 
         // Début de l'algorithme du recuit
-        int n1 = 100;
-        int n2 = 100;
-        Double temperature = 1.;
+        int n1 = 1000;
+        int n2 = 10;
+        Double temperature = 10000.;
         for(int i = 0; i<n1; i++){
             System.out.println("***************** Iteration centres : " + i + "*****************");
+            System.out.println("***************** Temperature : " + temperature + "*****************");
             for(int j = 0; j<n2; j++){
                 //selection d'un nouveau voisin et calcul de son résultat
                 listCentres = new ArrayList<>();
-                agencesToPutXy = this.getVoisins(agencesToPutXi);
-                for(int m =0; m<agencesToPutXy.length; m++)
-                    if (agencesToPutXy[m])
+                centresToPutXy = this.getVoisins(centresToPutXi);
+                for(int m =0; m<centresToPutXy.length; m++)
+                    if (centresToPutXy[m])
                         listCentres.add(m);
-                System.out.println("taille de la putain de liste donnée a ben : " + listCentres.size());
+                System.out.println("taille de la liste de centres donnée : " + listCentres.size());
                 xy = dispAgence.findSolution(listCentres);
 
                 //decision de si on le prend ou non comme meilleur solution
                 if(xy.getResultat()<xi.getResultat()) {
                     xi = xy;
-                    agencesToPutXi = agencesToPutXy;
+                    centresToPutXi = centresToPutXy;
                 }
 
                 else{
                     Double p = rand.nextDouble();
                     if(p <= Math.exp(-(xi.getResultat()-xy.getResultat())/temperature)){
                         xi=xy;
-                        agencesToPutXi = agencesToPutXy;
+                        centresToPutXi = centresToPutXy;
                     }
                 }
 

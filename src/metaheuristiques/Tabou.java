@@ -52,7 +52,6 @@ public class Tabou extends Heuristique {
     public ArrayList<Solution> getVoisins(Solution s, ArrayList<Solution> tabou){ // /!\ il faut ajouter la liste tabou
         HashMap<Agence,CentreFormation> map = s.getSolution();
         ArrayList<Solution> voisins = new ArrayList<>();
-        System.out.println(this.getAgences().size()*this.getCentres().size());
         int i = 0;
         for(Agence a : this.getAgences()) {
             for (CentreFormation c : this.getCentres()) {
@@ -64,7 +63,6 @@ public class Tabou extends Heuristique {
                         voisins.add(solutionTemp);
                 }
             }
-            System.out.println(i++);
         }
         return voisins;
     }
