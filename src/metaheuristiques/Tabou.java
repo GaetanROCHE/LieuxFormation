@@ -20,7 +20,7 @@ public class Tabou extends Heuristique {
         Solution solutionActu = new Solution(h);
         Solution bestSolution = solutionActu;
 
-        int n = 200;
+        int n = 10000;
         for(int i = 0 ; i<n; i++){
             System.out.println("Solution courrante : ");
             System.out.println("nombres de centres : " + solutionActu.getNbCentres());
@@ -28,40 +28,52 @@ public class Tabou extends Heuristique {
             System.out.println("resultat : " + solutionActu.getResultat());
             Solution bestVoisin = new Solution(null);
             Double min = Double.MAX_VALUE;
-            for(Solution s : this.getVoisins(solutionActu, tabou))
-                if(s.getResultat()<min)
+            ArrayList<Solution> voisins = this.getVoisins(solutionActu, tabou);
+            for(Solution s : voisins) {
+                if (s.getResultat() < min) {
                     bestVoisin = s;
+                    min = s.getResultat();
+                }
+            }
 
             if(!(bestVoisin.getResultat()<solutionActu.getResultat()))
                 tabou.add(solutionActu);
             solutionActu = bestVoisin;
             if(bestVoisin.getResultat()<bestSolution.getResultat())
                 bestSolution = bestVoisin;
-
         }
         return bestSolution;
     }
 
     /**
      * renvoi l'ensemble des voisins pour une solution données.
-     * Les voisins diffèrent d'une affectation de centres.
+     * Les voisins diffèrent d'une affectation de centres aléatoire pour une agence.
      * @param s
      * @return
      */
     public ArrayList<Solution> getVoisins(Solution s, ArrayList<Solution> tabou){ // /!\ il faut ajouter la liste tabou
         HashMap<Agence,CentreFormation> map = s.getSolution();
         ArrayList<Solution> voisins = new ArrayList<>();
-        int i = 0;
         for(Agence a : this.getAgences()) {
-            for (CentreFormation c : this.getCentres()) {
-                if(map.get(a) != c) {
-                    HashMap<Agence, CentreFormation> mapTemp = new HashMap<>(map);
-                    mapTemp.put(a, c);
-                    Solution solutionTemp = new Solution(mapTemp);
-                    if(!tabou.contains(solutionTemp))
-                        voisins.add(solutionTemp);
+            Solution solutionTemp;
+            do {
+                CentreFormation c;
+                if (new Random().nextInt(2) < 1) {//une chance sur deux d'affecter un centre déjà affecté.
+                    do {
+                        c = s.getCentres().get(new Random().nextInt(s.getCentres().size()));
+                    } while (map.get(a).equals(c));
+                } else {
+                    do {
+                        c = this.getCentres().get(new Random().nextInt(this.getCentres().size()));
+                    } while (map.get(a).equals(c));
                 }
-            }
+
+                HashMap<Agence, CentreFormation> mapTemp = new HashMap<>(map);
+                mapTemp.put(a, c);
+                solutionTemp = new Solution(mapTemp);
+            }while(!this.checkMap(solutionTemp.getSolution()));
+            if(!tabou.contains(solutionTemp))
+            voisins.add(solutionTemp);
         }
         return voisins;
     }

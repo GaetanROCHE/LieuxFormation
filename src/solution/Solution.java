@@ -3,6 +3,7 @@ package solution;
 import site.Agence;
 import site.CentreFormation;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,7 @@ public class Solution {
     private HashMap<Agence, CentreFormation> solution; //couple centre - agences
     private Double resultat = 0.;
     private Double distance = 0.;
-    private int nbCentres = 0;
+    private ArrayList<CentreFormation> centres = new ArrayList<>();
 
     public Solution(HashMap<Agence, CentreFormation> soluc){
         solution = soluc;
@@ -26,22 +27,26 @@ public class Solution {
     public double getResultat(){
         if(resultat == 0.) {
             this.distance = 0.;
-            ArrayList<CentreFormation> centres = new ArrayList<>();
             for (Map.Entry<Agence, CentreFormation> e : solution.entrySet()) {
                 this.distance += e.getKey().distance(e.getValue()) * e.getKey().getNbEmploye();
                 if(!centres.contains(e.getValue()))
-                    centres.add(e.getValue());
+                    this.centres.add(e.getValue());
             }
-            this.nbCentres = centres.size();
-            resultat = this.distance * 0.4 + 3000 * this.nbCentres;
+            resultat = this.distance * 0.4 * 2 + 3000 * this.centres.size();
         }
         return resultat;
     }
 
     public int getNbCentres() {
-        if(nbCentres == 0)
+        if(centres.size() == 0)
             this.getResultat();
-        return nbCentres;
+        return centres.size();
+    }
+
+    public ArrayList<CentreFormation> getCentres(){
+        if(centres.size() == 0)
+            this.getResultat();
+        return centres;
     }
 
     public Double getDistance() {

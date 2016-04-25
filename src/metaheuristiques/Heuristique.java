@@ -41,6 +41,7 @@ public abstract class Heuristique {
             centres.add(ceTemp);
         }
         System.out.println("Heuristique chargé");
+        System.out.println("Nombre minimum de centres : " + this.nbCentresMin());
     }
 
     public boolean checkMap(HashMap<Agence, CentreFormation> map)
@@ -70,5 +71,11 @@ public abstract class Heuristique {
         return agences;
     }
 
+    public int nbCentresMin(){
+        int res = 0;
+        for(Agence a : this.getAgences())
+            res += a.getNbEmploye();
+        return res/60+1;
+    }
 
 }

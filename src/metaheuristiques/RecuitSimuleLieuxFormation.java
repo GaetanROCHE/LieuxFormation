@@ -133,11 +133,4 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
         }
         return xmin;
     }
-
-    public int nbCentresMin(){
-        int res = 0;
-        for(Agence a : this.getAgences())
-            res += a.getNbEmploye();
-        return res/60+1;
-    }
 }
