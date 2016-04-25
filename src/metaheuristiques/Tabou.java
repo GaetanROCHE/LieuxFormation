@@ -6,6 +6,7 @@ import solution.Solution;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -13,6 +14,10 @@ import java.util.Random;
  */
 public class Tabou extends Heuristique {
 
+
+    public Tabou() {
+        super(true);
+    }
 
     public Solution run(){
         ArrayList<Solution> tabou = new ArrayList<>();
@@ -22,10 +27,10 @@ public class Tabou extends Heuristique {
 
         int n = 10000;
         for(int i = 0 ; i<n; i++){
-            System.out.println("Solution courrante : ");
+            /*System.out.println("Solution courrante : ");
             System.out.println("nombres de centres : " + solutionActu.getNbCentres());
             System.out.println("kilomètres parcourus : " + solutionActu.getDistance());
-            System.out.println("resultat : " + solutionActu.getResultat());
+            System.out.println("resultat : " + solutionActu.getResultat());*/
             Solution bestVoisin = new Solution(null);
             Double min = Double.MAX_VALUE;
             ArrayList<Solution> voisins = this.getVoisins(solutionActu, tabou);
@@ -41,7 +46,19 @@ public class Tabou extends Heuristique {
             solutionActu = bestVoisin;
             if(bestVoisin.getResultat()<bestSolution.getResultat())
                 bestSolution = bestVoisin;
+
+            System.out.print("|");
+            for(int j = 0; j<i+2; j=j+n/100)
+                System.out.print("=");
+            System.out.print(">");
+            for(int k = i; k<n; k=k+n/100)
+                System.out.print(" ");
+            System.out.print("| " + (i+1) + "/" + n);
+            System.out.println();
+
+            this.saveStat(bestSolution);
         }
+        this.endHeuristique();
         return bestSolution;
     }
 
@@ -73,7 +90,20 @@ public class Tabou extends Heuristique {
                 solutionTemp = new Solution(mapTemp);
             }while(!this.checkMap(solutionTemp.getSolution()));
             if(!tabou.contains(solutionTemp))
-            voisins.add(solutionTemp);
+                voisins.add(solutionTemp);
+        }
+        for(CentreFormation ce : s.getCentres()){
+            Solution solutionTemp2;
+            HashMap<Agence, CentreFormation> mapTemp2 = new HashMap<>(s.getSolution());
+            do{
+                CentreFormation centreRandom = this.getCentres().get(new Random().nextInt(this.getCentres().size()));
+                for(Map.Entry<Agence,CentreFormation> e : mapTemp2.entrySet()) {
+                    if (e.getValue().equals(ce))
+                        e.setValue(centreRandom);
+                }
+                solutionTemp2 = new Solution(mapTemp2);
+            }while(!this.checkMap(solutionTemp2.getSolution()));
+            voisins.add(solutionTemp2);
         }
         return voisins;
     }

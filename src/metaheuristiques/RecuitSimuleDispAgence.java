@@ -14,7 +14,7 @@ package metaheuristiques;
 public class RecuitSimuleDispAgence extends Heuristique{
 
     public RecuitSimuleDispAgence(){
-        super();
+        super(false);
     }
 
     public boolean checkSolution(Solution solution)

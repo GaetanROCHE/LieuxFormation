@@ -3,7 +3,10 @@ package metaheuristiques;
 import fileHandler.FileReader;
 import site.Agence;
 import site.CentreFormation;
+import solution.Solution;
 
+import java.sql.Date;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,11 +16,12 @@ import java.util.HashMap;
 public abstract class Heuristique {
     private ArrayList<Agence> agences;
     private ArrayList<CentreFormation> centres;
+    private fileHandler.FileWriter logs;
 
-    public Heuristique(){
+    public Heuristique(Boolean makeLogfile){
         agences = new ArrayList<Agence>();
         centres = new ArrayList<CentreFormation>();
-        FileReader fileAgences = new FileReader("ressources/ListeAgences_500.txt");
+        FileReader fileAgences = new FileReader("ressources/ListeAgences_100.txt");
         FileReader fileCentres = new FileReader("ressources/LieuxPossibles.txt");
         ArrayList<String[]> AgencesBrute = fileAgences.getData();
         ArrayList<String[]> CentresBrute = fileCentres.getData();
@@ -39,6 +43,12 @@ public abstract class Heuristique {
                     j);
             j++;
             centres.add(ceTemp);
+        }
+
+        //Création d'un fichier pour sauvegarder les logs
+        if(makeLogfile){
+            String fileName = "Logs-"+ Date.from(Instant.now()).getTime() + ".csv";
+            logs = new fileHandler.FileWriter(fileName);
         }
         System.out.println("Heuristique chargé");
         System.out.println("Nombre minimum de centres : " + this.nbCentresMin());
@@ -78,4 +88,11 @@ public abstract class Heuristique {
         return res/60+1;
     }
 
+    public void saveStat(Solution s){
+        logs.write(s);
+    }
+
+    public void endHeuristique(){
+        logs.closeFile();
+    }
 }

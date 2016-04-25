@@ -13,7 +13,7 @@ import java.util.Random;
 public class RecuitSimuleLieuxFormation extends Heuristique {
 
     public RecuitSimuleLieuxFormation(){
-        super();
+        super(false);
     }
 
     /**
