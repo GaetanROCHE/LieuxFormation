@@ -25,9 +25,10 @@ public class RecuitSimuleDispAgence extends Heuristique{
 
     public Solution voisinage(Solution solution1,ArrayList<Integer> ids)
     {
+    	
         HashMap<Agence, CentreFormation> map = solution1.getSolution();
         Solution retour;
-        do{
+       // do{
             Random rand = new Random();
             int min = 0;
             int max = map.size()-1;
@@ -35,20 +36,20 @@ public class RecuitSimuleDispAgence extends Heuristique{
             rand = new Random();
             int max2 = ids.size()-1;
             int nombreAleatoire2 = rand.nextInt(max2 - min + 1) + min;
-            Agence AgRandom = this.getAgences().get(nombreAleatoire1);//on choisit une agence al�atoire
-            CentreFormation CeRandom = this.getCentres().get(ids.get(nombreAleatoire2));//un centre al�atoire
+            Agence AgRandom = this.getAgences().get(nombreAleatoire1);//on choisit une agence aleatoire
+            CentreFormation CeRandom = this.getCentres().get(ids.get(nombreAleatoire2));//un centre aleatoire
 
-            if(map.get(AgRandom) == CeRandom)
+            if((map.get(AgRandom) == CeRandom)||checkCentre(map, CeRandom))
             {
                 do{
                     rand = new Random();
                     nombreAleatoire2 = rand.nextInt(max2 - min + 1) + min;
-                    CeRandom = this.getCentres().get(ids.get(nombreAleatoire2));//un centre al�atoire
+                    CeRandom = this.getCentres().get(ids.get(nombreAleatoire2));//un centre aleatoire
                 }while(map.get(AgRandom) == CeRandom);
             }
-            map.put(AgRandom, CeRandom);//on modifier la map: une agence est reli�e � un centre diff�rent
-            retour = new Solution(map);}
-        while(!checkSolution(retour));
+            map.put(AgRandom, CeRandom);//on modifier la map: une agence est reliee a un centre different
+            retour = new Solution(map);//}
+        //while(!checkSolution(retour));
         return retour;
     }
 
@@ -59,7 +60,7 @@ public class RecuitSimuleDispAgence extends Heuristique{
         return nouvelleTemperature;
     }
 
-    public Solution findSolution(ArrayList<Integer> Identifiants){//Recherche d'une solution pour les centres propos�s
+    public Solution findSolution(ArrayList<Integer> Identifiants){//Recherche d'une solution pour les centres proposes
         HashMap<Agence, CentreFormation> map = new HashMap();
         Solution solutionInitiale = new Solution(map);
 
@@ -83,20 +84,19 @@ public class RecuitSimuleDispAgence extends Heuristique{
             }
             while (!checkMap(map));
         }*/
-        int z = 0;
-        for(Agence ag : this.getAgences()) {//pour chaque agence on attribue un centre al�atoire;
+        CentreFormation ce;
+        for(Agence ag : this.getAgences()) {//pour chaque agence on attribue un centre aleatoire;
             //tem.out.println("agence : " + z);
-            z++;
             do {
                 Random rand = new Random();
                 int min = 0;
                 int max = Identifiants.size() - 1;
                 int nombreAleatoire1 = rand.nextInt(max - min + 1) + min;
-                map.put(ag, this.getCentres().get(Identifiants.get(nombreAleatoire1)));
+                ce = this.getCentres().get(Identifiants.get(nombreAleatoire1));
             }
-            while(!checkMap(map));
+            while(!checkCentre(map, ce));
+            map.put(ag, ce);
         }
-
         double temperatureInitiale = 1;
 
         Solution solutionMin = solutionInitiale;
