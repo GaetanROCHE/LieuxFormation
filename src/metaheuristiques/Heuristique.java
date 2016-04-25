@@ -73,6 +73,24 @@ public abstract class Heuristique {
         return true;// solution valide
     }
 
+    public boolean checkCentre(HashMap<Agence, CentreFormation> map, CentreFormation ce)
+    {
+    	int compteur=0;
+        for(Agence ag : this.getAgences())
+        {
+            CentreFormation ceAg = map.get(ag);
+            if(ceAg != null && ceAg == ce) 
+            {
+                compteur += ag.getNbEmploye();
+
+                if (compteur > 60) {
+                    return false;
+                }
+            }
+        }
+        return true;// solution valide
+    }
+    
     public ArrayList<CentreFormation> getCentres(){
         return centres;
     }
