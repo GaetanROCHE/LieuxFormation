@@ -2,10 +2,9 @@ package metaheuristiques;
         import java.util.ArrayList;
         import java.util.HashMap;
         import java.util.Random;
-        import static java.lang.StrictMath.exp;
 
-        import lieuxformation.Agence;
-        import lieuxformation.CentreFormation;
+        import site.Agence;
+        import site.CentreFormation;
         import solution.Solution;
 
 
@@ -138,7 +137,7 @@ public class RecuitSimuleDispAgence extends Heuristique{
                     int min = 0;
                     int max = 1;
                     int p = rand.nextInt(max - min + 1) + min;
-                    if(p<= (exp(-deltaf/temperatureEnCours)) )
+                    if(p<= (Math.exp(-deltaf/temperatureEnCours)) )
                     {
                         solutionSuivante = y;
                     }

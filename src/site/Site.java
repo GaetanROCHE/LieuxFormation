@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lieuxformation;
+package site;
 
 /**
  *
@@ -36,6 +36,8 @@ public abstract class Site {
     public Double getLatitude(){
         return this.latitude;
     }
+
+    public String getNom(){ return this.nom; }
 
     public int getId(){
         return this.id;

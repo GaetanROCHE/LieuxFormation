@@ -1,10 +1,9 @@
 package metaheuristiques;
 
 import fileHandler.FileReader;
-import lieuxformation.Agence;
-import lieuxformation.CentreFormation;
+import site.Agence;
+import site.CentreFormation;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 

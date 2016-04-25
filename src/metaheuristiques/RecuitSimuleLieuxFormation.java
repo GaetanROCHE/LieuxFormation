@@ -1,8 +1,7 @@
 
 package metaheuristiques;
 
-import lieuxformation.Agence;
-import lieuxformation.CentreFormation;
+import site.Agence;
 import solution.Solution;
 
 import java.util.ArrayList;
@@ -130,7 +129,7 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
             }
 
             //décroissance de la température
-            temperature = temperature / 2;
+            temperature = temperature / 1.25;
         }
         return xmin;
     }

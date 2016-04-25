@@ -1,7 +1,7 @@
 package solution;
 
-import lieuxformation.Agence;
-import lieuxformation.CentreFormation;
+import site.Agence;
+import site.CentreFormation;
 
 import java.util.ArrayList;
 import java.util.HashMap;

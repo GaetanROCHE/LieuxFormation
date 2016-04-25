@@ -1,12 +1,11 @@
 package metaheuristiques;
 
-import lieuxformation.Agence;
-import lieuxformation.CentreFormation;
+import site.Agence;
+import site.CentreFormation;
 import solution.Solution;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 /**
