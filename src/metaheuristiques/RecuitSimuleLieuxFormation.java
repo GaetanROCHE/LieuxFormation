@@ -24,23 +24,35 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
     public Boolean[] getVoisins(Boolean[] centresToPut){
         Random rand = new Random();
         int alea2;
+        int alea3;
         Boolean[] centresToPutTemp;
         do {
             centresToPutTemp = centresToPut.clone();
-            if (rand.nextInt(2) < 1) {
-                //3 chances sur 5 de d'enlever un centre
-
-                do {
-                    alea2 = rand.nextInt(centresToPutTemp.length);
-                } while (!centresToPutTemp[alea2]);
-                centresToPutTemp[alea2] = !centresToPutTemp[alea2]; //on enlève ou ajoute aléatoirement un centre de la liste
-            } else {
-                //une chance sur deux de d'ajouter un centre
-
-                do {
-                    alea2 = rand.nextInt(centresToPutTemp.length);
-                } while (centresToPutTemp[alea2]);
-                centresToPutTemp[alea2] = !centresToPutTemp[alea2]; //on enlève ou ajoute aléatoirement un centre de la liste
+            int choixRand = rand.nextInt(3);
+            switch(choixRand) {
+                case 0 :
+                    //1 chances sur 3 de d'enlever un centre
+                    do {
+                        alea2 = rand.nextInt(centresToPutTemp.length);
+                    } while (!centresToPutTemp[alea2]);
+                    centresToPutTemp[alea2] = !centresToPutTemp[alea2]; //on enlève ou ajoute aléatoirement un centre de la liste
+                    break;
+                case 1 :
+                    //une chance sur 3 de remplacer un centre
+                    do {
+                        alea2 = rand.nextInt(centresToPutTemp.length);
+                        alea3 = rand.nextInt(centresToPutTemp.length);
+                    } while (centresToPutTemp[alea2] == centresToPutTemp[alea3]);
+                    centresToPutTemp[alea2] = !centresToPutTemp[alea2]; //on remplace aléatoirement un centre centre de la liste
+                    centresToPutTemp[alea3] = !centresToPutTemp[alea3];
+                    break;
+                case 2 :
+                    //1 chances sur 3 de d'ajouter un centre
+                    do {
+                        alea2 = rand.nextInt(centresToPutTemp.length);
+                    } while (centresToPutTemp[alea2]);
+                    centresToPutTemp[alea2] = !centresToPutTemp[alea2]; //on enlève ou ajoute aléatoirement un centre de la liste
+                    break;
             }
         } while(!isCorrect(centresToPutTemp));
 
@@ -57,7 +69,7 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
         for(Boolean b : centresToPut)
             if (b)
                 x++;
-        return x>this.nbCentresMin();
+        return x>=this.nbCentresMin();
     }
 
     public Solution run(){
@@ -87,7 +99,7 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
         // Début de l'algorithme du recuit
         int n1 = 20;
         int n2 = 10;
-        Double temperature = 1000.;
+        Double temperature = 20.;
         for(int i = 0; i<n1; i++){
             for(int j = 0; j<n2; j++){
                 //selection d'un nouveau voisin et calcul de son résultat
@@ -96,7 +108,7 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
                 for(int m =0; m<centresToPutXy.length; m++)
                     if (centresToPutXy[m])
                         listCentres.add(m);
-                xy = dispAgence.findSolution(listCentres, i*n2+j);
+                xy = dispAgence.findSolution(listCentres, i*n2+j+1);
 
                 //decision de si on le prend ou non comme meilleur solution
                 if(xy.getResultat()<xi.getResultat()) {

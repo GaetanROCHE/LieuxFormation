@@ -21,7 +21,7 @@ public abstract class Heuristique {
     public Heuristique(Boolean makeLogfile){
         agences = new ArrayList<Agence>();
         centres = new ArrayList<CentreFormation>();
-        FileReader fileAgences = new FileReader("ressources/ListeAgences_500.txt");
+        FileReader fileAgences = new FileReader("ressources/ListeAgences_100.txt");
         FileReader fileCentres = new FileReader("ressources/LieuxPossibles.txt");
         ArrayList<String[]> AgencesBrute = fileAgences.getData();
         ArrayList<String[]> CentresBrute = fileCentres.getData();
