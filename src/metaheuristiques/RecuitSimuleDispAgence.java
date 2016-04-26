@@ -102,8 +102,8 @@ public class RecuitSimuleDispAgence extends Heuristique{
         Solution solutionMin = solutionInitiale;
         double resultatmin =  solutionMin.getResultat();
         int i = 0;
-        int n1 = 20;
-        int n2 = 20;
+        int n1 = 100;
+        int n2 = 100;
         Solution solutionEnCours = solutionInitiale;
         Solution solutionSuivante=solutionInitiale;
         double temperatureEnCours = temperatureInitiale;

@@ -25,7 +25,7 @@ public class Tabou extends Heuristique {
         Solution solutionActu = new Solution(h);
         Solution bestSolution = solutionActu;
 
-        int n = 10000;
+        int n = 100000;
         for(int i = 0 ; i<n; i++){
             /*System.out.println("Solution courrante : ");
             System.out.println("nombres de centres : " + solutionActu.getNbCentres());
@@ -47,14 +47,7 @@ public class Tabou extends Heuristique {
             if(bestVoisin.getResultat()<bestSolution.getResultat())
                 bestSolution = bestVoisin;
 
-            System.out.print("|");
-            for(int j = 0; j<i+2; j=j+n/100)
-                System.out.print("=");
-            System.out.print(">");
-            for(int k = i; k<n; k=k+n/100)
-                System.out.print(" ");
-            System.out.print("| " + (i+1) + "/" + n);
-            System.out.println();
+            this.printAvancement(i,n);
 
             this.saveStat(bestSolution);
         }

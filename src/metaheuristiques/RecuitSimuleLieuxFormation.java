@@ -13,7 +13,7 @@ import java.util.Random;
 public class RecuitSimuleLieuxFormation extends Heuristique {
 
     public RecuitSimuleLieuxFormation(){
-        super(false);
+        super(true);
     }
 
     /**
@@ -57,7 +57,6 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
         for(Boolean b : centresToPut)
             if (b)
                 x++;
-        System.out.println(x + " / " + this.nbCentresMin());
         return x>this.nbCentresMin();
     }
 
@@ -86,12 +85,10 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
         Boolean[] centresToPutXy;
 
         // Début de l'algorithme du recuit
-        int n1 = 1000;
-        int n2 = 10;
+        int n1 = 100;
+        int n2 = 100;
         Double temperature = 10000.;
         for(int i = 0; i<n1; i++){
-            System.out.println("***************** Iteration centres : " + i + "*****************");
-            System.out.println("***************** Temperature : " + temperature + "*****************");
             for(int j = 0; j<n2; j++){
                 //selection d'un nouveau voisin et calcul de son résultat
                 listCentres = new ArrayList<>();
@@ -99,7 +96,6 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
                 for(int m =0; m<centresToPutXy.length; m++)
                     if (centresToPutXy[m])
                         listCentres.add(m);
-                System.out.println("taille de la liste de centres donnée : " + listCentres.size());
                 xy = dispAgence.findSolution(listCentres);
 
                 //decision de si on le prend ou non comme meilleur solution
@@ -119,18 +115,23 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
                 //mise a jour de la meilleur solution si le voisin est le minimum
                 if(xmin.getResultat()>xy.getResultat())
                     xmin = xy;
-                System.out.println("Distance : " + xy.getDistance());
+
+                this.saveStat(xmin);
+                this.printAvancement(i*n2+j,n1*n2);
+
+                /*System.out.println("Distance : " + xy.getDistance());
                 System.out.println("Centres : " + xy.getNbCentres());
                 System.out.println("Prix : " + xy.getResultat());
                 System.out.println("Gardé : ");
                 System.out.println("** Distance : " + xmin.getDistance());
                 System.out.println("** Centres : " + xmin.getNbCentres());
-                System.out.println("** Prix : " +xmin.getResultat());
+                System.out.println("** Prix : " +xmin.getResultat());*/
             }
 
             //décroissance de la température
             temperature = temperature / 1.25;
         }
+        this.endHeuristique();
         return xmin;
     }
 }

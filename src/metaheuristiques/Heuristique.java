@@ -16,7 +16,7 @@ import java.util.HashMap;
 public abstract class Heuristique {
     private ArrayList<Agence> agences;
     private ArrayList<CentreFormation> centres;
-    private fileHandler.FileWriter logs;
+    private fileHandler.FileWriter logs = null;
 
     public Heuristique(Boolean makeLogfile){
         agences = new ArrayList<Agence>();
@@ -111,6 +111,18 @@ public abstract class Heuristique {
     }
 
     public void endHeuristique(){
-        logs.closeFile();
+        if(logs != null)
+            logs.closeFile();
+    }
+
+    public void printAvancement(int i, int n){
+        System.out.print("|");
+        for(int j = 0; j<i+1; j=j+n/100)
+            System.out.print("=");
+        System.out.print(">");
+        for(int k = i; k<n; k=k+n/100)
+            System.out.print(" ");
+        System.out.print("| " + (i+1) + "/" + n);
+        System.out.println();
     }
 }
