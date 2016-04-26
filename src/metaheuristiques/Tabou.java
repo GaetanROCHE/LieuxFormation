@@ -94,8 +94,9 @@ public class Tabou extends Heuristique {
         }
         for(CentreFormation ce : s.getCentres()){
             Solution solutionTemp2;
-            HashMap<Agence, CentreFormation> mapTemp2 = new HashMap<>(s.getSolution());
+            HashMap<Agence, CentreFormation> mapTemp2;
             do{
+                mapTemp2 = new HashMap<>(s.getSolution());
                 CentreFormation centreRandom = this.getCentres().get(new Random().nextInt(this.getCentres().size()));
                 for(Map.Entry<Agence,CentreFormation> e : mapTemp2.entrySet()) {
                     if (e.getValue().equals(ce))
