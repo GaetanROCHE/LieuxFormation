@@ -79,15 +79,15 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
             }
         }while(!isCorrect(centresToPutXi));
         RecuitSimuleDispAgence dispAgence = new RecuitSimuleDispAgence();
-        Solution xmin = dispAgence.findSolution(listCentres);               //solution minimal
+        Solution xmin = dispAgence.findSolution(listCentres, 1);               //solution minimal
         Solution xi = xmin;                                                 //solution courrante à chaque itérations
         Solution xy;                                                        //solution du voisin
         Boolean[] centresToPutXy;
 
         // Début de l'algorithme du recuit
-        int n1 = 100;
-        int n2 = 100;
-        Double temperature = 10000.;
+        int n1 = 20;
+        int n2 = 10;
+        Double temperature = 1000.;
         for(int i = 0; i<n1; i++){
             for(int j = 0; j<n2; j++){
                 //selection d'un nouveau voisin et calcul de son résultat
@@ -96,7 +96,7 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
                 for(int m =0; m<centresToPutXy.length; m++)
                     if (centresToPutXy[m])
                         listCentres.add(m);
-                xy = dispAgence.findSolution(listCentres);
+                xy = dispAgence.findSolution(listCentres, i*n2+j);
 
                 //decision de si on le prend ou non comme meilleur solution
                 if(xy.getResultat()<xi.getResultat()) {

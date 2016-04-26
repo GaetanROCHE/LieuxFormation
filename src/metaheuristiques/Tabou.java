@@ -25,7 +25,7 @@ public class Tabou extends Heuristique {
         Solution solutionActu = new Solution(h);
         Solution bestSolution = solutionActu;
 
-        int n = 100000;
+        int n = 1000;
         for(int i = 0 ; i<n; i++){
             /*System.out.println("Solution courrante : ");
             System.out.println("nombres de centres : " + solutionActu.getNbCentres());
@@ -41,8 +41,8 @@ public class Tabou extends Heuristique {
                 }
             }
 
-            if(!(bestVoisin.getResultat()<solutionActu.getResultat()))
-                tabou.add(solutionActu);
+            /*if(!(bestVoisin.getResultat()<solutionActu.getResultat()))
+                tabou.add(solutionActu);*/
             solutionActu = bestVoisin;
             if(bestVoisin.getResultat()<bestSolution.getResultat())
                 bestSolution = bestVoisin;
@@ -82,8 +82,8 @@ public class Tabou extends Heuristique {
                 mapTemp.put(a, c);
                 solutionTemp = new Solution(mapTemp);
             }while(!this.checkMap(solutionTemp.getSolution()));
-            if(!tabou.contains(solutionTemp))
-                voisins.add(solutionTemp);
+            //if(!tabou.contains(solutionTemp))
+            voisins.add(solutionTemp);
         }
         for(CentreFormation ce : s.getCentres()){
             Solution solutionTemp2;

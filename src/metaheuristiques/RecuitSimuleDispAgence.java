@@ -60,7 +60,7 @@ public class RecuitSimuleDispAgence extends Heuristique{
         return nouvelleTemperature;
     }
 
-    public Solution findSolution(ArrayList<Integer> Identifiants){//Recherche d'une solution pour les centres proposes
+    public Solution findSolution(ArrayList<Integer> Identifiants, int itérations){//Recherche d'une solution pour les centres proposes
         HashMap<Agence, CentreFormation> map = new HashMap();
         Solution solutionInitiale = new Solution(map);
 
@@ -97,13 +97,12 @@ public class RecuitSimuleDispAgence extends Heuristique{
             while(!checkCentre(map, ce));
             map.put(ag, ce);
         }
-        double temperatureInitiale = 1;
+        double temperatureInitiale = 1000.;
 
         Solution solutionMin = solutionInitiale;
         double resultatmin =  solutionMin.getResultat();
         int i = 0;
         int n1 = 100;
-        int n2 = 100;
         Solution solutionEnCours = solutionInitiale;
         Solution solutionSuivante=solutionInitiale;
         double temperatureEnCours = temperatureInitiale;
@@ -113,7 +112,7 @@ public class RecuitSimuleDispAgence extends Heuristique{
             if(temperatureSuivante!=temperatureInitiale){
                 temperatureEnCours = temperatureSuivante;
             }
-            for(int l=0; l<n2; l++)
+            for(int l=0; l<itérations; l++)
             {
 
                 if(solutionSuivante!=solutionInitiale){
