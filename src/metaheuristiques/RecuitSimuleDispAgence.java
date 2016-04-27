@@ -34,14 +34,11 @@ public class RecuitSimuleDispAgence extends Heuristique{
             CeRandom = this.getCentres().get(ids.get(new Random().nextInt(ids.size())));//un centre aleatoire
         }while(map.get(AgRandom) == CeRandom || !checkCentre(map, CeRandom));
         map.put(AgRandom, CeRandom);//on modifier la map: une agence est reliee a un centre different
-        retour = new Solution(map);
-        return retour;
+        return new Solution(map);
     }
 
     public double avancementTemperature(double temperatureInitiale){
-        double nouvelleTemperature;
-        nouvelleTemperature = temperatureInitiale/(2);
-        return nouvelleTemperature;
+        return temperatureInitiale/2;
     }
 
     public Solution findSolution(ArrayList<Integer> Identifiants, int iterations){//Recherche d'une solution pour les centres proposes

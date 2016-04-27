@@ -125,11 +125,6 @@ public abstract class Heuristique {
     }
 
     public void printAvancement(int i, int n){
-        try {
-            Runtime.getRuntime().exec("clear");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         int pourcent = ((i+1)*100/n);
         System.out.print("|");
         for(int j = 0; j<pourcent; j++)

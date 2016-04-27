@@ -100,7 +100,7 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
 
         // Début de l'algorithme du recuit
         int n1 = 500;
-        int n2 = 500;
+        int n2 = 100;
         Double temperature = 10.;
         for(int i = 0; i<n1; i++){
             for(int j = 0; j<n2; j++){
@@ -124,7 +124,6 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
                     if(p <= Math.exp(0-(xy.getResultat()-xi.getResultat())/temperature)){
                         xi=xy;
                         centresToPutXi = centresToPutXy;
-                        System.out.println("on prend malgrés tout");
                     }
                 }
 
