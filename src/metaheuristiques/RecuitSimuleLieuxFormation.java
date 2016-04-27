@@ -90,16 +90,18 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
                 centresToPutXi[alea] = true;
             }
         }while(!isCorrect(centresToPutXi));
-        RecuitSimuleDispAgence dispAgence = new RecuitSimuleDispAgence();
-        Solution xmin = dispAgence.findSolution(listCentres, 1);               //solution minimal
+        GreedyDispAgence dispAgence = new GreedyDispAgence();
+        Solution xmin = dispAgence.findSolution(listCentres);
+        //RecuitSimuleDispAgence dispAgence = new RecuitSimuleDispAgence();
+        //Solution xmin = dispAgence.findSolution(listCentres, 1);               //solution minimal
         Solution xi = xmin;                                                 //solution courrante à chaque itérations
         Solution xy;                                                        //solution du voisin
         Boolean[] centresToPutXy;
 
         // Début de l'algorithme du recuit
-        int n1 = 20;
-        int n2 = 10;
-        Double temperature = 20.;
+        int n1 = 500;
+        int n2 = 500;
+        Double temperature = 10.;
         for(int i = 0; i<n1; i++){
             for(int j = 0; j<n2; j++){
                 //selection d'un nouveau voisin et calcul de son résultat
@@ -108,7 +110,8 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
                 for(int m =0; m<centresToPutXy.length; m++)
                     if (centresToPutXy[m])
                         listCentres.add(m);
-                xy = dispAgence.findSolution(listCentres, i*n2+j+1);
+                //xy = dispAgence.findSolution(listCentres, i*n2+j+1);
+                xy = dispAgence.findSolution(listCentres);
 
                 //decision de si on le prend ou non comme meilleur solution
                 if(xy.getResultat()<xi.getResultat()) {
@@ -118,9 +121,10 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
 
                 else{
                     Double p = rand.nextDouble();
-                    if(p <= Math.exp(-(xi.getResultat()-xy.getResultat())/temperature)){
+                    if(p <= Math.exp(0-(xy.getResultat()-xi.getResultat())/temperature)){
                         xi=xy;
                         centresToPutXi = centresToPutXy;
+                        System.out.println("on prend malgrés tout");
                     }
                 }
 
@@ -141,7 +145,7 @@ public class RecuitSimuleLieuxFormation extends Heuristique {
             }
 
             //décroissance de la température
-            temperature = temperature / 1.25;
+            temperature = temperature / 2;
         }
         this.endHeuristique();
         return xmin;

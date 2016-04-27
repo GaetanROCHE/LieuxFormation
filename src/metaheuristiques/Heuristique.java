@@ -5,6 +5,7 @@ import site.Agence;
 import site.CentreFormation;
 import solution.Solution;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -19,22 +20,30 @@ public abstract class Heuristique {
     private fileHandler.FileWriter logs = null;
 
     public Heuristique(Boolean makeLogfile){
-        agences = new ArrayList<Agence>();
-        centres = new ArrayList<CentreFormation>();
-        FileReader fileAgences = new FileReader("ressources/ListeAgences_100.txt");
+        agences = new ArrayList<>();
+        centres = new ArrayList<>();
+        FileReader fileAgences = new FileReader("ressources/ListeAgences_500.txt");
         FileReader fileCentres = new FileReader("ressources/LieuxPossibles.txt");
         ArrayList<String[]> AgencesBrute = fileAgences.getData();
         ArrayList<String[]> CentresBrute = fileCentres.getData();
         int i =0;
         int j = 0;
         for(String[] agencesFromStrings : AgencesBrute){
+            i=(-1);
+            do {
+                i++;
+            }while(agences.size() != i && agences.get(i).getNbEmploye() <= Integer.parseInt(agencesFromStrings[5]));
             Agence agTemp = new Agence(agencesFromStrings[1],
                     Double.parseDouble(agencesFromStrings[4]),
                     Double.parseDouble(agencesFromStrings[3]),
                     Integer.parseInt(agencesFromStrings[5]),
-                    i);
+                    0);
+            agences.add(i, agTemp);
+        }
+        i=0;
+        for(Agence a1 : agences){
+            a1.setId(i);
             i++;
-            agences.add(agTemp);
         }
         for(String[] centresFromStrings : CentresBrute){
             CentreFormation ceTemp = new CentreFormation(centresFromStrings[1],
@@ -116,13 +125,19 @@ public abstract class Heuristique {
     }
 
     public void printAvancement(int i, int n){
+        try {
+            Runtime.getRuntime().exec("clear");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int pourcent = ((i+1)*100/n);
         System.out.print("|");
-        for(int j = 0; j<i+1; j=j+n/100)
+        for(int j = 0; j<pourcent; j++)
             System.out.print("=");
         System.out.print(">");
-        for(int k = i; k<n; k=k+n/100)
+        for(int k = pourcent; k<100; k++)
             System.out.print(" ");
-        System.out.print("| " + (i+1) + "/" + n);
+        System.out.print("| " + (i+1) + "/" + n + " | " + pourcent + "%");
         System.out.println();
     }
 }
