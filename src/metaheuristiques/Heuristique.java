@@ -1,5 +1,6 @@
 package metaheuristiques;
 
+import fileHandler.DrawPic;
 import fileHandler.FileReader;
 import site.Agence;
 import site.CentreFormation;
@@ -122,6 +123,7 @@ public abstract class Heuristique {
     public void endHeuristique(){
         if(logs != null)
             logs.closeFile();
+        new DrawPic().drawSolution(this.agences, this.centres, this.);
     }
 
     public void printAvancement(int i, int n){
